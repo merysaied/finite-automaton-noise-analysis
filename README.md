@@ -1,56 +1,50 @@
-# Automaton Robustness Analysis
+# Automaton Noise Analysis
 
 ## About the Project
 
-This project was developed as a **group project for the Automata course**. Its main objective is to investigate how noise and missing data affect the performance of a Decision Tree model and to explore the relationship between Decision Trees and Finite Automata.
+This project was developed as a **group project for the Automata course**.
 
-The project uses the Titanic dataset to train a Decision Tree classifier, represents the tree as a finite automaton, and evaluates its robustness under different data corruption scenarios.
+The project investigates how noise and missing data affect the performance of a Decision Tree model using the Titanic dataset. It also explores the relationship between Decision Trees and Finite Automata.
 
-The project also includes a Streamlit dashboard for visualizing the model, automaton states, and experimental results.
+A Streamlit dashboard is used to visualize the results and analyze the effects of different noise levels.
 
 ## My Contribution
 
-My main responsibility in this group project was improving the model training and noise experimentation pipeline in `train_model.py`.
+My contribution focused on the model training and noise analysis pipeline:
 
-The work I completed includes:
-
-### 1. Data Preparation and Leakage Prevention
-- Used `.copy()` when creating DataFrame subsets to avoid unintended modifications.
-- Calculated the mean age using training data only.
-- Applied the training mean to handle missing age values in both training and testing datasets.
-- This prevents information from the test set from leaking into the training process.
-
-### 2. Noise Generation
-- Used a NumPy random generator (`rng`) for reproducible noise generation.
-- Implemented independent noise generation for different features.
-- Added Gaussian noise to age values.
-- Restricted noisy age values to the valid range of 0–80.
-
-### 3. Missing Data Simulation (Epsilon)
-- Implemented the epsilon-loss scenario to simulate missing age information.
-- Replaced affected age values with the mean age calculated from the training set.
-- Saved the calculated mean age in the pickle artifact so the application can use the same imputation value.
-
-### 4. Repeated Experiments and Statistical Evaluation
+- Used `.copy()` to prevent unintended modifications to the original DataFrames.
+- Calculated the mean age using training data only to prevent data leakage.
+- Generated independent noise using a single NumPy random generator (`rng`).
+- Clipped generated ages to the range of 0–80.
+- Implemented missing-data handling (ε) using mean imputation.
+- Saved the calculated mean age so it could also be used by the application.
 - Repeated each experiment 20 times to obtain more reliable results.
-- Calculated and stored the mean accuracy and standard deviation for each noise scenario and noise level.
-- Used these measurements to evaluate model stability under different noise conditions.
+- Calculated and saved the mean and standard deviation for each experiment.
+- Added noise levels of 0.6, 0.8, and 0.9.
+- Saved the trained model and experiment results in `model_artifacts.pkl`.
 
-### 5. Noise Levels and Baseline
-- Extended the noise levels to include 0.6, 0.8, and 0.9.
-- Included the baseline accuracy (61.6%) as a reference for evaluating the model's performance under noisy conditions.
+## Model Results
 
-## Noise Scenarios
+Results from the latest training run:
 
-The project evaluates five scenarios:
+| Metric | Result |
+|---|---:|
+| Clean test accuracy | 80.45% |
+| Majority-class baseline | 58.66% |
+| Number of states | 15 |
+| Accepting states | `q_3`, `q_11`, `q_13` |
 
-| Scenario | Description |
-|---|---|
-| Age | Gaussian noise is added to age values. |
-| Sex | Randomly flips encoded sex values. |
-| Pclass | Randomly changes passenger ticket classes. |
-| All Combined | Applies noise to age, sex, and passenger class. |
-| Epsilon Loss | Simulates missing age data using mean imputation. |
+## Noise Analysis
+
+The project examines different noise scenarios:
+
+- Age noise
+- Sex noise
+- Passenger class (Pclass) noise
+- Combined noise
+- Missing-data handling (ε)
+
+Each experiment is repeated 20 times, and its mean and standard deviation are calculated.
 
 ## Technologies Used
 
@@ -62,54 +56,32 @@ The project evaluates five scenarios:
 - Matplotlib
 - Pickle
 
-## Project Structure
+## How to Run
 
-```text
-automata/
-│
-├── train_model.py
-├── app.py
-├── train.csv
-├── test.csv
-├── model_artifacts.pkl
-└── README.md
-```
-
-## How to Run the Project
-
-### 1. Install Dependencies
+### 1. Install dependencies
 
 ```bash
 pip install numpy pandas scikit-learn streamlit matplotlib
 ```
 
-### 2. Train the Model
+### 2. Train the model
 
 ```bash
 python train_model.py
 ```
 
-This generates `model_artifacts.pkl`, which contains the trained model, automaton information, noise experiment results, statistical measurements, and other values required by the application.
+This generates the `model_artifacts.pkl` file.
 
-### 3. Run the Dashboard
+### 3. Run the Streamlit application
 
 ```bash
 python -m streamlit run app.py
 ```
 
-The Streamlit dashboard will open in your browser.
+## Academic Information
 
-## Project Purpose
-
-The project demonstrates how a Decision Tree can be interpreted as a Finite Automaton and how its classification performance changes when its input data is affected by noise or missing information.
-
-By repeating experiments and measuring both mean accuracy and standard deviation, the project provides a way to study not only model performance but also its stability and robustness.
-
-## Academic Context
-
-**Course:** Automata
-
-**Project Type:** Group Project
-
-**My Role:** Model training pipeline improvements, data preprocessing, noise simulation, repeated experimentation, and statistical result collection.
+- **Course:** Automata
+- **Project Type:** Group Project
+- **Dataset:** Titanic
+- **My Role:** Data preprocessing, noise generation, missing-data handling, repeated experiments, and statistical evaluation.
 
